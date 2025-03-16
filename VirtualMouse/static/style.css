@@ -1,0 +1,41 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f0f0f0;
+}
+
+h1 {
+  color: #333;
+  margin-top: 20px;
+}
+
+.container {
+  margin: 20px auto;
+  width: 640px;
+}
+
+img {
+  width: 100%;
+  border: 2px solid #333;
+  border-radius: 5px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+button.on {
+  background-color: #4caf50; /* Màu xanh khi bật */
+  color: white;
+}
+
+button.off {
+  background-color: #f44336; /* Màu đỏ khi tắt */
+  color: white;
+}

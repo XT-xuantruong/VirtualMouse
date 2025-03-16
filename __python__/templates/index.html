@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Mouse</title>
+</head>
+
+<body>
+    <h1>Virtual Mouse Control</h1>
+    <img id="video_feed" style="border:1px solid black; width:640px; height:480px;" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        // Lắng nghe sự kiện video_frame từ server
+        socket.on('video_frame', function (data) {
+            document.getElementById('video_feed').src = "data:image/jpeg;base64," + data.frame;
+        });
+    </script>
+</body>
+
+</html>

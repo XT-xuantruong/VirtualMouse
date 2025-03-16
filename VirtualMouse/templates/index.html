@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Mouse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <h1>Virtual Mouse Control</h1>
+    <div class="container">
+        <img src="{{ url_for('video_feed') }}" alt="Video Stream">
+        <button id="toggleButton" onclick="toggleVirtualMouse()">Toggle Virtual Mouse</button>
+    </div>
+
+    <script>
+        function toggleVirtualMouse() {
+            fetch('/toggle_virtual_mouse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const button = document.getElementById('toggleButton');
+                    button.textContent = data.enabled ? 'Turn OFF Virtual Mouse' : 'Turn ON Virtual Mouse';
+                    button.className = data.enabled ? 'on' : 'off';
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Khởi tạo trạng thái ban đầu của nút
+        window.onload = function () {
+            const button = document.getElementById('toggleButton');
+            button.textContent = 'Turn OFF Virtual Mouse'; // Mặc định là ON
+            button.className = 'on';
+        };
+    </script>
+</body>
+
+</html>

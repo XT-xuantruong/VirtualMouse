@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuột Ảo Máy Tính</title>
+    <style>
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .buttons {
+            margin: 20px 0;
+        }
+
+        .start-button,
+        .stop-button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .video-container {
+            margin-top: 20px;
+        }
+
+        #video_feed {
+            max-width: 640px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Chuột Ảo Máy Tính</h1>
+        <p class="status">Trạng thái: Đang chờ kết nối...</p>
+        <div class="buttons">
+            <button class="start-button" onclick="startVirtualMouse()">Bật</button>
+            <button class="stop-button" onclick="stopVirtualMouse()">Tắt</button>
+        </div>
+        <div class="video-container">
+            <img id="video_feed" src="" alt="Video từ webcam">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io.connect('http://' + document.domain + ':' + location.port, {
+            transports: ['websocket']
+        });
+
+        socket.on('connect', () => {
+            console.log('Successfully connected to WebSocket server');
+        });
+
+        socket.on('connect_error', (error) => {
+            console.error('WebSocket connection error:', error);
+        });
+
+        socket.on('video_frame', function (data) {
+            console.log('Received video frame length:', data.frame.length);
+            const img = document.getElementById('video_feed');
+            img.src = 'data:image/jpeg;base64,' + data.frame;
+            img.onload = function () {
+                console.log('Image loaded successfully');
+            };
+            img.onerror = function () {
+                console.error('Failed to load image from base64 data');
+            };
+        });
+
+        function startVirtualMouse() {
+            document.querySelector('.status').innerText = 'Trạng thái: Chuột ảo đang hoạt động!';
+            socket.emit('start_mouse');
+            alert('Chuột ảo đã được kích hoạt!');
+        }
+
+        function stopVirtualMouse() {
+            document.querySelector('.status').innerText = 'Trạng thái: Chuột ảo đã tắt!';
+            socket.emit('stop_mouse');
+            alert('Chuột ảo đã được tắt!');
+        }
+    </script>
+</body>
+
+</html>

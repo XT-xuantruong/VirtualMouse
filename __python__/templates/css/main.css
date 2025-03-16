@@ -1,0 +1,16 @@
+.container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.video-container {
+  width: 640px;
+  height: 480px;
+  margin: 10px auto;
+  border: 2px solid black;
+}
+
+#video_feed {
+  width: 100%;
+  height: auto;
+}
