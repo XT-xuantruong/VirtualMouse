@@ -17,6 +17,7 @@ class MouseService:
         self.virtual_mouse_enabled = True
 
     async def generate_frames(self):
+        """Tạo khung hình để stream qua WebSocket"""
         while True:
             success, frame = self.cam.read()
             if not success:
@@ -39,14 +40,14 @@ class MouseService:
                     else:
                         fingers.append(0)
 
-                cv2.rectangle(image, (100, 50), (self.wCam - 100, self.hCam - 190), (0, 0, 0), 2)
+                cv2.rectangle(image, (50, 25), (self.wCam - 50, self.hCam - 95), (0, 0, 0), 2)
                 status_text = "Virtual Mouse: ON" if self.virtual_mouse_enabled else "Virtual Mouse: OFF"
-                cv2.putText(image, status_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1,
-                            (0, 255, 0) if self.virtual_mouse_enabled else (0, 0, 255), 2)
+                cv2.putText(image, status_text, (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                            (0, 255, 0) if self.virtual_mouse_enabled else (0, 0, 255), 1)
 
                 if self.virtual_mouse_enabled:
-                    x3 = np.interp(x1, (100, self.wCam - 100), (0, self.wScreen))
-                    y3 = np.interp(y1, (50, self.hCam - 190), (0, self.hScreen))
+                    x3 = np.interp(x1, (50, self.wCam - 50), (0, self.wScreen))
+                    y3 = np.interp(y1, (25, self.hCam - 95), (0, self.hScreen))
                     self.clocX = self.plocX + (x3 - self.plocX) / self.Smoothening
                     self.clocY = self.plocY + (y3 - self.plocY) / self.Smoothening
 
@@ -55,7 +56,7 @@ class MouseService:
                         pyautogui.mouseUp(button="left")
                     elif fingers == [0, 1, 0, 0, 0]:
                         pyautogui.moveTo(self.clocX, self.clocY)
-                        cv2.circle(image, (x1, y1), 10, (0, 255, 0), -1)
+                        cv2.circle(image, (x1, y1), 5, (0, 255, 0), -1)
                         self.plocX, self.plocY = self.clocX, self.clocY
                     elif fingers == [1, 1, 1, 0, 0]:
                         length, _, _ = self.detector.findDistance(8, 12, image)
@@ -80,10 +81,9 @@ class MouseService:
                         pyautogui.moveTo(self.clocX, self.clocY)
                         self.plocX, self.plocY = self.clocX, self.clocY
 
-            ret, buffer = cv2.imencode('.jpg', image)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            ret, buffer = cv2.imencode('.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+            if ret:
+                yield buffer.tobytes()  # Trả về bytes để gửi qua WebSocket
 
     def toggle_virtual_mouse(self):
         self.virtual_mouse_enabled = not self.virtual_mouse_enabled
