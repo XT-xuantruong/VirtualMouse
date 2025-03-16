@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: virtual-mouse
+    env: python
+    plan: free
+    buildCommand: |
+      apt-get update && apt-get install -y xvfb
+      pip install -r requirements.txt
+    startCommand: "xvfb-run python main.py"
