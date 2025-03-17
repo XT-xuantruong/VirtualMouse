@@ -11,7 +11,7 @@ This project uses FastAPI for the backend to process webcam video and control th
 
 ### 1. Clone the Repository
 ```bash
-git clone [<repository-url>](https://github.com/XT-xuantruong/VirtualMouse.git)
+git clone https://github.com/XT-xuantruong/VirtualMouse.git
 cd VirtualMouseProject
 ```
 ### 2. Set Up Backend (Flask)
