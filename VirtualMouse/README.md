@@ -11,7 +11,7 @@ This project implements a virtual mouse controlled by hand gestures using OpenCV
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
+git clone [<repository-url>](https://github.com/XT-xuantruong/VirtualMouse.git)
 cd VirtualMouseProject
 ```
 ### 2. Set Up Backend (Flask)
